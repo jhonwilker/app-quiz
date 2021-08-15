@@ -36,6 +36,27 @@ class _QuizAppState extends State<QuizApp> {
     getPerguntas();
     return _perguntaSelecionada < _perguntas.length;
   }
+  /*
+    var _perguntas = const [
+        {
+          'texto': 'Qual a sua cor favorita?',
+          'respostas': [
+            {'texto': 'Azul', 'pontuacao': 10},
+            {'texto': 'Verde', 'pontuacao': 10},
+            {'texto': 'Preto', 'pontuacao': 10},
+          ]
+        },
+        {
+          'texto': 'Qual o seu animal favorito?',
+          'respostas': [
+            {'texto': 'Cão', 'pontuacao': 10},
+            {'texto': 'Gato', 'pontuacao': 10},
+            {'texto': 'Passáro', 'pontuacao': 10}
+          ]
+        },
+      ];
+  
+  */
 
   void getPerguntas() async {
     var url = Uri.http('10.0.2.2:5000', '/perguntas', {'q': '{http}'});
