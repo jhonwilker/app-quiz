@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:quiz/app/models/pergunta.dart';
 import 'package:quiz/app/resultado/resuldato.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert' as convert;
+import 'dart:convert';
 
 import 'questionario/questionario.dart';
 
@@ -14,7 +17,17 @@ class QuizApp extends StatefulWidget {
 class _QuizAppState extends State<QuizApp> {
   var _perguntaSelecionada = 0;
   var _pontuacaoTotal = 0;
-  var _perguntas;
+  List<Map<String, Object>> _perguntas = [];
+
+  void getPerguntas() async {
+    var url = Uri.parse('http://apiquizflask.herokuapp.com/perguntas');
+    var response = await http.get(url);
+    List<Map<String, Object>> responseData = jsonDecode(response.body)['perguntas'];
+    print('------');
+    print(responseData);
+    print('------');
+    print(_perguntas);
+  }
 
   void _responder(int pontuacao) {
     if (temPerguntaSelecionada) {
@@ -33,42 +46,33 @@ class _QuizAppState extends State<QuizApp> {
   }
 
   bool get temPerguntaSelecionada {
-    getPerguntas();
-    return _perguntaSelecionada < _perguntas.length;
+    return _perguntaSelecionada > _perguntas.length;
   }
-  /*
-    var _perguntas = const [
-        {
-          'texto': 'Qual a sua cor favorita?',
-          'respostas': [
-            {'texto': 'Azul', 'pontuacao': 10},
-            {'texto': 'Verde', 'pontuacao': 10},
-            {'texto': 'Preto', 'pontuacao': 10},
-          ]
-        },
-        {
-          'texto': 'Qual o seu animal favorito?',
-          'respostas': [
-            {'texto': 'Cão', 'pontuacao': 10},
-            {'texto': 'Gato', 'pontuacao': 10},
-            {'texto': 'Passáro', 'pontuacao': 10}
-          ]
-        },
-      ];
-  
-  */
 
-  void getPerguntas() async {
-    var url = Uri.http('10.0.2.2:5000', '/perguntas', {'q': '{http}'});
-    var response = await http.get(url);
-
-    //if(response.statusCode == 200) {
-    _perguntas = convert.jsonDecode(response.body) as Map<String, dynamic>;
-    print(_perguntas);
-  }
+/*
+  var _perguntas = [
+    {
+      'texto': 'Qual a sua cor favorita?',
+      'respostas': [
+        {'texto': 'Azul', 'pontuacao': 10},
+        {'texto': 'Verde', 'pontuacao': 10},
+        {'texto': 'Preto', 'pontuacao': 10},
+      ]
+    },
+    {
+      'texto': 'Qual o seu animal favorito?',
+      'respostas': [
+        {'texto': 'Cão', 'pontuacao': 10},
+        {'texto': 'Gato', 'pontuacao': 10},
+        {'texto': 'Passáro', 'pontuacao': 10}
+      ]
+    },
+  ];
+*/
 
   @override
   Widget build(BuildContext context) {
+    getPerguntas();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
